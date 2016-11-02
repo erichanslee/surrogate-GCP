@@ -1,25 +1,8 @@
 #!/usr/bin/env python
 
-# Copyright 2015 Google Inc. All Rights Reserved.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#    http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+# Code mostly taken from the Google Python API Tutorial at:
+# https://cloud.google.com/compute/docs/tutorials/python-guide
 
-"""Example of using the Compute Engine API to create and delete instances.
-Creates a new compute engine instance and uses it to apply a caption to
-an image.
-    https://cloud.google.com/compute/docs/tutorials/python-guide
-For more information, see the README.md under /compute.
-"""
 
 import argparse
 import os
@@ -41,7 +24,7 @@ def list_instances(compute, project, zone):
 def create_instance(compute, project, zone, name, bucket):
     # Get the latest Debian Jessie image.
     image_response = compute.images().getFromFamily(
-        project='debian-cloud', family='debian-8').execute()
+        project='debian-cloud', family='debian-8').execute() #TODO: Change to custom image
     source_disk_image = image_response['selfLink']
 
     # Configure the machine
@@ -139,55 +122,3 @@ def wait_for_operation(compute, project, zone, operation):
 
         time.sleep(1)
 # [END wait_for_operation]
-
-
-# [START run]
-def main(project, bucket, zone, instance_name, wait=True):
-    credentials = GoogleCredentials.get_application_default()
-    compute = discovery.build('compute', 'v1', credentials=credentials)
-
-    print('Creating instance.')
-
-    operation = create_instance(compute, project, zone, instance_name, bucket)
-    wait_for_operation(compute, project, zone, operation['name'])
-
-    instances = list_instances(compute, project, zone)
-
-    print('Instances in project %s and zone %s:' % (project, zone))
-    for instance in instances:
-        print(' - ' + instance['name'])
-
-    print("""
-Instance created.
-It will take a minute or two for the instance to complete work.
-Check this URL: http://storage.googleapis.com/{}/output.png
-Once the image is uploaded press enter to delete the instance.
-""".format(bucket))
-
-    if wait:
-        input()
-
-    print('Deleting instance.')
-
-    operation = delete_instance(compute, project, zone, instance_name)
-    wait_for_operation(compute, project, zone, operation['name'])
-
-
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('project_id', help='Your Google Cloud project ID.')
-    parser.add_argument(
-        'bucket_name', help='Your Google Cloud Storage bucket name.')
-    parser.add_argument(
-        '--zone',
-        default='us-central1-f',
-        help='Compute Engine zone to deploy to.')
-    parser.add_argument(
-        '--name', default='demo-instance', help='New instance name.')
-
-    args = parser.parse_args()
-
-    main(args.project_id, args.bucket_name, args.zone, args.name)
-# [END run]
