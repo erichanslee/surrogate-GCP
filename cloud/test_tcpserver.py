@@ -10,9 +10,3 @@ print(name)
 cthread = threading.Thread(target=server.run)
 cthread.start()
 
-result = 0
-while(result==0):
-	pass
-result = server.controller.best_point()
-print("Final: {0:.3e} @ {1}".format(result.value, result.params))
-
