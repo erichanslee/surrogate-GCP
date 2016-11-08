@@ -1,4 +1,4 @@
-from poap.tcpserve import SocketWorker
+from poap.tcpserve import SimpleSocketWorker
 import argparse
 
 parser = argparse.ArgumentParser(description='Process some integers.')
@@ -8,4 +8,4 @@ port = args.integers
 port = port[0]
 print "Launching worker on port ", port
 name = ('localhost', int(port))
-SocketWorker(sockname=name, retries=1).run()
+SimpleSocketWorker(sockname=name, retries=1).run()

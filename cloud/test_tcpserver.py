@@ -9,4 +9,6 @@ name = server.sockname
 print(name)
 cthread = threading.Thread(target=server.run)
 cthread.start()
-
+cthread.join()
+result = server.controller.best_point()
+print("Final: {0:.3e} @ {1}".format(result.value, result.params))

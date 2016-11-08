@@ -51,7 +51,7 @@ class cloudUnit:
 
 	def deleteInstance(self, instanceId):
 		operation = delete_instance(self.compute, self.projectName, self.region, instanceId)
-		wait_for_operation(compute, project, zone, operation['name'])
+		wait_for_operation(self.compute, self.projectName, self.region, operation['name'])
 		# If master isn't deleted, decrement numWorkers
 		if(instanceId != 'master'):
 			self.numWorkers = self.numWorkers - 1
