@@ -1,14 +1,12 @@
 Installations Required:
 
-Google Compute Platform SDK (https://cloud.google.com/sdk/)
+Google Compute Platform SDK (https://cloud.google.com/sdk/)  
+GCP API Client for Python (https://github.com/google/google-api-python-client)  
+SciPy (https://www.scipy.org/)  
+SciKit-Learn (http://scikit-learn.org/stable/)  
+PySOT and POAP (https://github.com/dme65/pySOT)  
+GPy (https://github.com/SheffieldML/GPy)
 
-GCP API Client for Python (https://github.com/google/google-api-python-client)
-
-SciPy (https://www.scipy.org/)
-
-SciKit-Learn (http://scikit-learn.org/stable/)
-
-PySOT and POAP (https://github.com/dme65/pySOT)
 
 
 Folders:
@@ -25,6 +23,7 @@ searchtree
 tests
 
 * Contains unit tests, sample problems
+* Currently contains Gaussian Process scripts as well
 
 utility
 
