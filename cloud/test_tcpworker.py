@@ -5,7 +5,7 @@ import argparse
 import threading
 from poap.tcpserve import SimpleSocketWorker
 
-timeout = 0
+timeout = 10
 
 def f(x):
 	logging.info("Request for {0}".format(x))

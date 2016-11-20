@@ -1,4 +1,5 @@
 import threading
+import time
 import GPy
 import numpy as np
 from poap.tcpserve import ThreadedTCPServer
@@ -11,8 +12,9 @@ server = ThreadedTCPServer(sockname=('0.0.0.0', 0))
 tstrategy = InputStrategy(server.controller, strategy)
 server.strategy = tstrategy
 
-# Evaluate points
-X = np.linspace(-3, 3, num=50)
+# Evaluate points in initial sweep
+numevals = 30
+X = np.linspace(-3, 3, num=numevals)
 for x in X:
 	tstrategy.eval(x)
 
@@ -23,6 +25,26 @@ print(name)
 # Start Server
 cthread = threading.Thread(target=server.run)
 cthread.start()
+
+# Busy Wait (to be changed to semaphore later)
+timeout = 0
+while(timeout < 10):
+	if(len(server.controller.fevals) > numevals - 10):
+		print "Check complete, first round of evaluations finished (check number: %f)", \
+		server.controller.fevals[numevals-10].value
+		break
+	else:
+		time.sleep(2)
+		timeout = timeout + 1
+		tstrategy.eval(timeout)
+
+# Add more function evals on the controller queue
+# ~~Note that if function evaluations occur too quickly, further evaluations will not
+# ~~occur as the workers will be send a finish signal first  
+X = np.linspace(3, 6, num=numevals)
+for x in X:
+	tstrategy.eval(x)
+
 cthread.join()
 offset = 10;
 Xnew = np.zeros([len(server.controller.fevals)-offset, 1])
