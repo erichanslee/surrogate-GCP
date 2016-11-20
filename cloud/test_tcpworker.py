@@ -26,6 +26,8 @@ def main():
 	port = args.integers
 	port = port[0]
 	print "Launching worker on port ", port
+
+	# Make sure to change 'localhost' to the internal/external IP required
 	name = ('localhost', int(port))
 	wthreads = []
 	for k in range(2):
