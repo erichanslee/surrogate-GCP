@@ -26,13 +26,13 @@ def main():
 	# Parse InputArgs
 	logging.basicConfig(format="%(name)-18s: %(levelname)-8s %(message)s",level=logging.INFO)
 	parser = argparse.ArgumentParser(description='Process some integers.')
+	parser.add_argument('strings', metavar='N', type=str, nargs='+',)
 	parser.add_argument('integers', metavar='N', type=int, nargs='+',)
 	args = parser.parse_args()
 	argint = args.integers
-	IP = argint[0];
-	IP = str(IP)
-	port = argint[1]
-	port = int(port)
+	argstr = args.strings
+	IP = argstr[0];
+	port = argint[0]
 
 	# Launch worker with two threads 
 	print "Launching worker on port ", port
@@ -46,6 +46,4 @@ def main():
 		t.join()
 
 if __name__ == '__main__':
-    if len(sys.argv) > 1:
-        TIMEOUT = float(sys.argv[1])
     main()
