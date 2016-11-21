@@ -5,6 +5,10 @@ import argparse
 import threading
 from poap.tcpserve import SimpleSocketWorker
 
+# Worker evaluates function f(x) for some given x. Takes in two arguments, an IP address and a Port:
+# i.e. tcpworker 127.00.01 4000 
+# where 127.00.01 is the IP address and 4000 is the port number. 
+
 timeout = 10
 
 def f(x):
@@ -19,16 +23,20 @@ def worker_main(name):
 	SimpleSocketWorker(f, sockname=name, retries=1).run()
 
 def main():
+	# Parse InputArgs
 	logging.basicConfig(format="%(name)-18s: %(levelname)-8s %(message)s",level=logging.INFO)
 	parser = argparse.ArgumentParser(description='Process some integers.')
 	parser.add_argument('integers', metavar='N', type=int, nargs='+',)
 	args = parser.parse_args()
-	port = args.integers
-	port = port[0]
-	print "Launching worker on port ", port
+	argint = args.integers
+	IP = argint[0];
+	IP = str(IP)
+	port = argint[1]
+	port = int(port)
 
-	# Make sure to change 'localhost' to the internal/external IP required
-	name = ('localhost', int(port))
+	# Launch worker with two threads 
+	print "Launching worker on port ", port
+	name = (IP, port)
 	wthreads = []
 	for k in range(2):
 		wthread = threading.Thread(target=worker_main, args=(name,))
