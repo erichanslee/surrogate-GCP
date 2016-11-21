@@ -3,7 +3,6 @@
 # Code mostly taken from the Google Python API Tutorial at:
 # https://cloud.google.com/compute/docs/tutorials/python-guide
 
-
 import argparse
 import os
 import time
@@ -23,10 +22,15 @@ def list_instances(compute, project, zone):
 # [START create_instance]
 def create_instance(compute, project, zone, name, bucket):
     # Get the latest Debian Jessie image.
+    '''
     image_response = compute.images().getFromFamily(
         project='debian-cloud', family='debian-8').execute() #TODO: Change to custom image
     source_disk_image = image_response['selfLink']
+    '''
 
+    # load custom image
+    source_disk_image = "https://googleapis.com/compute/v1/projects/" + project + "/global/images/private-image-1"
+    
     # Configure the machine
     machine_type = "zones/%s/machineTypes/n1-standard-1" % zone
     startup_script = open(
