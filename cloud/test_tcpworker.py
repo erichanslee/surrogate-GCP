@@ -9,7 +9,7 @@ from poap.tcpserve import SimpleSocketWorker
 # i.e. tcpworker 127.00.01 4000 
 # where 127.00.01 is the IP address and 4000 is the port number. 
 
-timeout = 10
+timeout = 3
 
 def f(x):
 	logging.info("Request for {0}".format(x))

@@ -13,7 +13,7 @@ tstrategy = InputStrategy(server.controller, strategy)
 server.strategy = tstrategy
 
 # Evaluate points in initial sweep
-numevals = 30
+numevals = 15
 X = np.linspace(-3, 3, num=numevals)
 for x in X:
 	tstrategy.eval(x)
@@ -29,6 +29,7 @@ cthread.start()
 # Busy Wait (to be changed to semaphore later)
 timeout = 0
 while(timeout < 10):
+	print len(server.controller.fevals)
 	if(len(server.controller.fevals) > numevals - 10):
 		print "Check complete, first round of evaluations finished (check number: %f)", \
 		server.controller.fevals[numevals-10].value
@@ -36,11 +37,10 @@ while(timeout < 10):
 	else:
 		time.sleep(2)
 		timeout = timeout + 1
-		tstrategy.eval(timeout)
 
 # Add more function evals on the controller queue
 # ~~Note that if function evaluations occur too quickly, further evaluations will not
-# ~~occur as the workers will be send a finish signal first  
+# ~~occur as the workers will be sent a finish signal first  
 X = np.linspace(3, 6, num=numevals)
 for x in X:
 	tstrategy.eval(x)
