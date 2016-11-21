@@ -6,11 +6,13 @@ import GPy
 import numpy as np
 import matplotlib.pyplot as plt
 import pdb
+from GPhelpers import *
 from IPython.display import display
 from poap.strategy import FixedSampleStrategy
 from poap.strategy import InputStrategy
 from poap.tcpserve import ThreadedTCPServer
 from poap.tcpserve import SimpleSocketWorker
+from scipy.stats import norm
 
 
 # Set up default host, port, and time
@@ -22,7 +24,7 @@ def f(x):
 	if TIMEOUT > 0:
 		time.sleep(TIMEOUT)
 	logging.info("OK, done")
-	return np.sin(x) + np.random.randn()*.05
+	return 5*np.sin(x)
 
 
 def worker_main(name):
@@ -73,12 +75,9 @@ def main():
 		Ynew[k] = server.controller.fevals[k].value[0]
 		Xnew[k] = server.controller.fevals[k].params[0]
 
-	# Start GP
-	kernel = GPy.kern.RBF(input_dim=1, variance=1., lengthscale=1.)
-	m = GPy.models.GPRegression(Xnew,Ynew,kernel)
-	fig = m.plot()
-	regfig = GPy.plotting.show(fig)
-	regfig.savefig('test-GP-sinwave.png')
+	# Start GP and regress
+	m = calcGP(Xnew, Ynew)
+	plotGP(m)
 	
 
 if __name__ == '__main__':

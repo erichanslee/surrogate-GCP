@@ -29,13 +29,12 @@ cthread.start()
 # Busy Wait (to be changed to semaphore later)
 timeout = 0
 while(timeout < 10):
-	print len(server.controller.fevals)
 	if(len(server.controller.fevals) > numevals - 10):
-		print "Check complete, first round of evaluations finished (check number: %f)", \
+		print "Check complete, first round of evaluations finished, check number: ", \
 		server.controller.fevals[numevals-10].value
 		break
 	else:
-		time.sleep(2)
+		time.sleep(5)
 		timeout = timeout + 1
 
 # Add more function evals on the controller queue
