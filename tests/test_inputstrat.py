@@ -77,7 +77,9 @@ def main():
 
 	# Start GP and regress
 	m = calcGP(Xnew, Ynew)
-	plotGP(m)
+	XB = batchNewEvals_EI(m) 
+	print XB
+#	plotGP(m)
 	
 
 if __name__ == '__main__':

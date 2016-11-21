@@ -1,6 +1,7 @@
 import GPy
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy.stats import norm
 
 # ~~~~WARNING: ONLY SUPPORT FOR 1D RIGHT NOW~~~~ # 
 
@@ -38,13 +39,17 @@ def updateGP(model, kernel, Xnew, Ynew):
 	return m
 
 
-# Updates GP with new sampled points
-def updateGPwithEI(model, fidelity=100):
+# Using Expected Improvement, send out a number of further evaluations
+#	-batchsize = number of new evals
+#	-fidelity = number of points used to estimate EI
+#	-bounds = determines how new evals points are spaced
+def batchNewEvals_EI(model, bounds=1, batchsize=50, fidelity=100):
 	P, ei = compute_ei(model, fidelity)
-	idx = np.argmax(ei)
+	idx = np.argmax(ei)	
 	xnew = P[idx]
-	# TODO ynew = 
- 
+ 	X = np.linspace(xnew-bounds, xnew+bounds, num=batchsize)
+	return X
+
 # Calculates EI given means mu and variances sigma2
 def compute_ei_inner(ybest, mu, sigma2):
 	sigma = np.sqrt(sigma2)
@@ -57,8 +62,9 @@ def compute_ei_inner(ybest, mu, sigma2):
 # Takes in GP model from GPy and computes EI at points P
 # We are assuming maximization, rather than minimization
 def compute_ei(model, numsamples):
-	P = linspace(model.X[0], model.X[-1], num=numsamples)
-	ybest = np.maximum(model.Y)
+	P = np.linspace(model.X[0], model.X[-1], num=numsamples)
+	ybest = np.amax(model.Y)
+	P = np.reshape(P, [len(P), 1])
 	mu, sigma2 = model.predict(P)
 	return P, compute_ei_inner(ybest, mu, sigma2)
 
