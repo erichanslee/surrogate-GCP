@@ -16,7 +16,7 @@ from scipy.stats import norm
 
 
 # Set up default host, port, and time
-TIMEOUT = 0
+TIMEOUT = .2
 
 
 def f(x):
@@ -39,8 +39,9 @@ def main():
 	# Launch controller
 	strategy = FixedSampleStrategy([])
 	server = ThreadedTCPServer()
+	initbatchsize = 20
 	tstrategy = InputStrategy(server.controller, strategy);
-	X = np.random.uniform(-3.,3.,(50,1))
+	X = np.random.uniform(-3.,3.,(initbatchsize,1))
 	Y = np.ones([len(X), 1])
 	for k in X:
 		tstrategy.eval(k)
@@ -60,27 +61,38 @@ def main():
 		wthread.start()
 		wthreads.append(wthread)
 
+	# Wait for some fevals to complete
+	time.sleep(.5)
+	
 
+	batchsize = 20; numfevals = 0; maxfevals = 100
+	# Copy data from worker evals
+	while(numfevals < maxfevals):
+
+		offset = numworkers
+
+		# Get new fevals
+		numfevals = len(server.controller.fevals)
+		Xnew = np.zeros([numfevals-offset, 1])
+		Ynew = np.zeros([numfevals-offset, 1])
+		for k in range(len(server.controller.fevals)-offset):
+			Ynew[k] = server.controller.fevals[k].value[0]
+			Xnew[k] = server.controller.fevals[k].params[0]
+		
+		# Calculate GP and batch out new fevals
+		m = calcGP(Xnew, Ynew)
+		X = batchNewEvals_EI(m, bounds=1, batchsize=batchsize, fidelity=100)
+		for k in X:
+			tstrategy.eval([k])
+		
+		# Wait for some fevals to complete
+		time.sleep(.5)
+	
+	plotGP(m)
 	# Wait on controller and workers
 	cthread.join()
 	for t in wthreads:
 		t.join()
-
-
-	# Copy data from worker evals
-	offset = numworkers;
-	Xnew = np.zeros([len(server.controller.fevals)-offset, 1])
-	Ynew = np.zeros([len(server.controller.fevals)-offset, 1])
-	for k in range(len(server.controller.fevals)-offset):
-		Ynew[k] = server.controller.fevals[k].value[0]
-		Xnew[k] = server.controller.fevals[k].params[0]
-
-	# Start GP and regress
-	m = calcGP(Xnew, Ynew)
-	XB = batchNewEvals_EI(m) 
-	print XB
-#	plotGP(m)
-	
 
 if __name__ == '__main__':
 	if len(sys.argv) > 1:
