@@ -36,7 +36,7 @@ def main():
 	logging.basicConfig(format="%(name)-18s: %(levelname)-8s %(message)s",
 						level=logging.INFO)
 
-	# Launch controller
+	# Launch controller, server
 	strategy = FixedSampleStrategy([])
 	server = ThreadedTCPServer()
 	initbatchsize = 20
@@ -64,14 +64,11 @@ def main():
 	# Wait for some fevals to complete
 	time.sleep(.5)
 	
-
-	batchsize = 20; numfevals = 0; maxfevals = 100
-	# Copy data from worker evals
+	# Main Loop
+	batchsize = 20; numfevals = 0; maxfevals = 80
 	while(numfevals < maxfevals):
-
-		offset = numworkers
-
 		# Get new fevals
+		offset = numworkers
 		numfevals = len(server.controller.fevals)
 		Xnew = np.zeros([numfevals-offset, 1])
 		Ynew = np.zeros([numfevals-offset, 1])
@@ -88,8 +85,8 @@ def main():
 		# Wait for some fevals to complete
 		time.sleep(.5)
 	
+	# Plot and wait on controller and workers
 	plotGP(m)
-	# Wait on controller and workers
 	cthread.join()
 	for t in wthreads:
 		t.join()
