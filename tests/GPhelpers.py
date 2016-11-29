@@ -60,7 +60,7 @@ def compute_ei_inner(ybest, mu, sigma2):
 	return ei
 
 # Takes in GP model from GPy and computes EI at points P
-# We are assuming maximization, rather than minimization
+# We are assuming minimization, and thus ybest represents the smallest point we have so far
 def compute_ei(model, numsamples):
 	P = np.linspace(model.X[0], model.X[-1], num=numsamples)
 	ybest = np.amax(model.Y)
