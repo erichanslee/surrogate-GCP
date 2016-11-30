@@ -29,7 +29,7 @@ def create_instance(compute, project, zone, name, bucket):
     '''
 
     # load custom image
-    source_disk_image = "https://googleapis.com/compute/v1/projects/" + project + "/global/images/private-image-1"
+    source_disk_image = "https://googleapis.com/compute/v1/projects/" + project + "/global/images/worker-image-1"
     
     # Configure the machine
     machine_type = "zones/%s/machineTypes/n1-standard-1" % zone

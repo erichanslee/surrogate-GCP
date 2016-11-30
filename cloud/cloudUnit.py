@@ -58,7 +58,14 @@ class cloudUnit:
 			print 'Deleting instance ', instanceId
 		else:
 			print 'Deleting master'
-
+	
+	def cleanupWorkers(self):
+		print "Cleaning up workers"
+		# Delete Workers
+		if(self.workerIds != []):
+			for workerId in self.workerIds:
+				self.deleteInstance(workerId)
+			
 
 	def cleanup(self):
 		print 'Cleaning up cloud unit'
