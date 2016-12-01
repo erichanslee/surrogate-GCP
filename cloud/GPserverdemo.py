@@ -9,8 +9,8 @@ from poap.strategy import FixedSampleStrategy
 from poap.strategy import InputStrategy
 
 # Evaluate points in initial sweep
-numevals = 20
-X = 2*np.random.random(numevals)-1
+numevals = 30
+X = 4*np.random.random(numevals)-2
 
 # Start Up TCP Server
 strategy = FixedSampleStrategy(X)
@@ -45,11 +45,9 @@ while(len(server.controller.fevals) < numevals):
 		Ynew = np.delete(Ynew, idx)
 		Ynew = np.reshape(Ynew, [len(Ynew), 1])
 		Xnew = np.reshape(Xnew, [len(Xnew), 1])
-		print Xnew
-		print Ynew
 		kernel = GPy.kern.RBF(input_dim=1, variance=1., lengthscale=1.)
 		m = GPy.models.GPRegression(Xnew,Ynew,kernel)
-		m.optimize_restarts(3)
+		m.optimize_restarts(10)
 		fig = m.plot()
 		plt.pause(.5)
 #		m.optimize_restarts(3)
