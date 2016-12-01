@@ -49,6 +49,7 @@ while(len(server.controller.fevals) < numevals):
 		print Ynew
 		kernel = GPy.kern.RBF(input_dim=1, variance=1., lengthscale=1.)
 		m = GPy.models.GPRegression(Xnew,Ynew,kernel)
+		m.optimize_restarts(3)
 		fig = m.plot()
 		plt.pause(.5)
 #		m.optimize_restarts(3)
