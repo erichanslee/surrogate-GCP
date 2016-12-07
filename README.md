@@ -27,5 +27,5 @@ utility
 
 Tests to run: 
 
-gp/test-noisysine.py tests the Surrogate Construction Process 
+gp/test-noisysine.py tests the Surrogate Construction Process   
 cloud/test-tcp.py tests basic communication between Master and Workers on a single machine
