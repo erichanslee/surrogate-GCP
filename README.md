@@ -25,4 +25,7 @@ utility
 * Contains utility functions, including transition function construction (among others)
 * Transition Function Contruction requires SciPy and SciKit-Learn
 
+Tests to run: 
 
+gp/test-noisysine.py tests the Surrogate Construction Process 
+cloud/test-tcp.py tests basic communication between Master and Workers on a single machine
