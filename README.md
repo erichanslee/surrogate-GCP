@@ -5,7 +5,7 @@ GCP API Client for Python (https://github.com/google/google-api-python-client)
 SciPy (https://www.scipy.org/)  
 PySOT and POAP (https://github.com/dme65/pySOT)  
 GPy (https://github.com/SheffieldML/GPy)
-
+Scikit Learn (http://scikit-learn.org/stable/)
 
 
 Folders:

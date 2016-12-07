@@ -53,7 +53,7 @@ def main():
 	name = server.sockname
 	logging.info("Launch controller at {0}".format(name))
 
-	# Launch workers
+	# Launch workers on local machine
 	numworkers = 5;
 	wthreads = []
 	for k in range(numworkers):
