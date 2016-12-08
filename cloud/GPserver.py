@@ -2,13 +2,14 @@ import threading
 import time
 import GPy
 import numpy as np
+from cloudUnit import cloudUnit
 from poap.tcpserve import ThreadedTCPServer
 from poap.strategy import FixedSampleStrategy
 from poap.strategy import InputStrategy
 
 # Start Up TCP Server
 strategy = FixedSampleStrategy([])
-server = ThreadedTCPServer(sockname=('0.0.0.0', 0))
+server = ThreadedTCPServer(sockname=('0.0.0.0', 3000))
 tstrategy = InputStrategy(server.controller, strategy)
 server.strategy = tstrategy
 
@@ -20,7 +21,12 @@ for x in X:
 
 # Get Server Socket
 name = server.sockname 
-print(name)
+print "Starting Server on socket ", name
+
+# Start CloudUnit Worker
+unit = cloudUnit('xenon-marker-147522')
+unit.startWorker()
+print "Worker Successfully Started"
 
 # Start Server
 cthread = threading.Thread(target=server.run)
